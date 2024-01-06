@@ -33,13 +33,13 @@ Enhanced UI to reflect user roles and permissions.
 <hr>
 ****Some Home Screens****<br><hr>
 **User's home** <br>
-![image](https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/eac58ff2-13d3-464f-b218-6561ca573b07)
+https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/eac58ff2-13d3-464f-b218-6561ca573b07
  <br>
 **Admin Home**<br>
-![image](https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/c1fab5fe-f9ea-4203-9ffe-1031b4ceb1e1)
+https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/c1fab5fe-f9ea-4203-9ffe-1031b4ceb1e1
  <br>
 **Manager Home**<br>
-![image](https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/8e0e84e9-7a6d-4d5f-8b3a-1678bc8082c1)
+[image](https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/8e0e84e9-7a6d-4d5f-8b3a-1678bc8082c1)
 
 
 
