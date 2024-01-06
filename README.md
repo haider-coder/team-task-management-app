@@ -15,8 +15,7 @@ Implement ACL to control access to certain tasks based on user roles.<br>
 Defined roles such as "Admin," "Manager," and "User."<br>
 Assigned permissions to roles (e.g., Admin can perform all actions, Manager can edit tasks, User can only view
 tasks).<br><br>
-**User Authentication and Authorization:
-**<br>
+**User Authentication and Authorization:**<br>
 Integrated Laravel Auth UI for user authentication.<br>
 Implemented middleware to check user permissions before allowing access to certain routes.<br>
 Include a feature that allows users to provide feedback on tasks.<br><br>
