@@ -30,7 +30,8 @@ Implemented event listeners and events for Web Hooks.
 Implemented middleware to check user permissions.
 Enhanced UI to reflect user roles and permissions.
 <br>
-****Some Home Screens****
+<hr>
+****Some Home Screens****<br><hr>
 **User's home** <br>
 ![image](https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/3c8405f5-b2bd-456e-ba51-f98cd7e7d7f4)<br>
 **Admin Home**<br>
