@@ -29,7 +29,8 @@
 
 
 <!-- Task Modal -->
-<div class="modal fade" id="taskModal{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
+<div class="modal fade" id="taskModal{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -49,11 +50,15 @@
                     </a>
                 @endif
                 <form action="{{ route('tasks.update-status', $task) }}" method="post">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="btn btn-warning" name="status" value="In Progress">Set as In Progress</button>
-                    <button type="submit" class="btn btn-success" name="status" value="Completed">Set as Completed</button>
-                </form>
+                        @csrf
+                        @method('PATCH')
+                        <div class="form-group py-2">
+                            <label for="feedbackInput">Feedback:</label>
+                            <textarea class="form-control" id="feedbackInput" name="feedback" rows="3">{{ $task->feedback }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-warning" name="status" value="In Progress">Set as In Progress</button>
+                        <button type="submit" class="btn btn-success" name="status" value="Completed">Set as Completed</button>
+                    </form>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>

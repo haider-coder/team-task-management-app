@@ -38,7 +38,10 @@ class TaskStatusNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('Task status has been updated!')
+            ->line('Hey please complete this task!')
+            ->line('Task Details:')
+            ->line('Title: ' . $this->task->title)
+            ->line('Description: ' . $this->task->description)
             ->action('View Task', url('/tasks/showtask/' . $this->task->id))
             ->line('Thank you for using our application!');
     }

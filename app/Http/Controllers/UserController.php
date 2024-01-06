@@ -28,6 +28,18 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User deleted successfully');
+        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully');
+    }
+
+    public function updateType(Request $request, User $user)
+    {
+        $request->validate([
+            'type' => 'required|in:0,1,2', //  0 is user, 1 is admin, and 2 is manager
+        ]);
+
+        $user->type = $request->input('type');
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User type updated successfully.');
     }
 }
