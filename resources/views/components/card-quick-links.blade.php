@@ -6,6 +6,8 @@
 
             @if(auth()->user()->type == 'admin')
             <li><a href="{{ route('admin.users.index') }}">Manage Users</a></li>
+
+
             @endif
 
         </ul>

@@ -45,12 +45,11 @@ class TaskController extends Controller
         $user = User::find($request->input('user_id')); // Retrieve the User model instance
 
         if ($user) {
-            $user->notify(new TaskAssigned($task));
+            $task->save(); // Save the task first to get the ID
+            $user->notify(new TaskAssigned($task)); // Now generate the URL with the task ID
         } else {
             return redirect()->route('admin.tasks.index')->with('error', 'User not found.');
         }
-
-        $task->save();
 
         return redirect()->route('admin.tasks.index')->with('success', 'Task created successfully');
     }

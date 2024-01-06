@@ -39,6 +39,9 @@ class TaskAssigned extends Notification
     {
         return (new MailMessage)
             ->line('You have been assigned a new task!')
+            ->line('Task Details:')
+            ->line('Title: ' . $this->task->title)
+            ->line('Description: ' . $this->task->description)
             ->action('View Task', route('tasks.showtask', ['taskId' => $this->task->id]))
             ->line('Thank you for using our application!');
     }

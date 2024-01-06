@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TaskController;
@@ -49,6 +50,9 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('users/{user}/show-tasks', [UserController::class, 'showTasks'])->name('admin.users.show_tasks');
     Route::delete('users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+    //Change User Type
+    Route::patch('/admin/users/{user}/update-type', [UserController::class, 'updateType'])->name('admin.users.update-type');
+
 });
 
 
