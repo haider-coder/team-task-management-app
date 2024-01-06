@@ -26,9 +26,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $tasks = auth()->user()->tasks()->get();
+        $userTasks = auth()->user()->tasks();
+
+        // Retrieve only tasks with status 'To Do' or 'In Progress'
+        $tasks = $userTasks->whereIn('status', ['To Do', 'In Progress'])->get();
+
         return view('/index', compact('tasks'));
     }
+
 
     /**
      * Show the application dashboard.

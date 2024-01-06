@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Notifications\TaskAssigned;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -53,7 +54,6 @@ class TaskController extends Controller
 
         return redirect()->route('admin.tasks.index')->with('success', 'Task created successfully');
     }
-
 
 
     public function edit($id)
@@ -126,20 +126,26 @@ class TaskController extends Controller
     {
         $request->validate([
             'status' => 'required|in:To Do,In Progress,Completed',
+            'feedback' => 'nullable|string|max:255', // New validation rule for feedback
         ]);
 
         $task->status = $request->input('status');
+        $task->feedback = $request->input('feedback');
         $task->save();
 
+        $redirectTo = $this->getRedirectRoute(Auth::user()->type);
 
-        if (auth()->user()->type == 'admin') {
-            return redirect()->route('admin.home')->with('status', 'Task status updated successfully.');
-        }else if (auth()->user()->type == 'manager') {
-            return redirect()->route('manager.home')->with('status', 'Task status updated successfully.');
-        }else{
-            return redirect()->route('home')->with('status', 'Task status updated successfully.');
+        return redirect()->route($redirectTo)->with('status', 'Task status updated successfully.');
+    }
+    private function getRedirectRoute($userType)
+    {
+        switch ($userType) {
+            case 'admin':
+                return 'admin.home';
+            case 'manager':
+                return 'manager.home';
+            default:
+                return 'home';
         }
     }
-
-
 }

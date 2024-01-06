@@ -71,6 +71,7 @@
                                                     <p><strong>Description:</strong> {{ $task->description }}</p>
                                                     <p><strong>Status:</strong> {{ $task->status }}</p>
                                                     <p><strong>User:</strong> {{ $task->user->name }}</p>
+                                                    <p><strong>Feedback:</strong> {{ $task->feedback}}</p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"

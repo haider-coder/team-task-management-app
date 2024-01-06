@@ -24,7 +24,7 @@
                     <div class="card-header">Actionable Items</div>
                     <div class="card-body">
                         <ul>
-                            <li><a href="{{route('tasks.pending')}}">Pending tasks: {{ $pendingTasksCount  ?? 0  }}</a></li>
+                            <li><a href="{{route('tasks.pending')}}">To Do tasks: {{ $pendingTasksCount  ?? 0  }}</a></li>
                             <li><a href="{{route('tasks.completed')}}">Completed tasks: {{ $completedTasksCount  ?? 0  }}</a></li>
                             <li>Users awaiting approval: {{ $pendingUsersCount  ?? 0  }}</li>
                             <!-- Add more actionable items as needed -->
