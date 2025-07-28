@@ -1,5 +1,18 @@
 # Task-management-app
-task management application where users can perform CRUD operations on tasks.
+Task management application where users can perform CRUD operations on tasks.
+
+<hr>
+
+**Initial Setup:**<br>
+- composer install
+- npm install
+- generate .env and copy contents of .env.sample and configure db and mail credentials accordingly
+- php artisan key:generate
+- php artisan migrate:fresh --seed
+- npm run build
+- php artisan serve
+
+<hr>
 
 **CRUD Operations:**<br>
 Create, read, update, and delete tasks.<br>
@@ -29,16 +42,3 @@ Used Blade templates for rendering views.
 Implemented event listeners and events for Web Hooks.
 Implemented middleware to check user permissions.
 Enhanced UI to reflect user roles and permissions.
-<br>
-<hr>
-****Some Home Screens****<br><hr>
-**User's home** <br>
-![image](https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/5b3511b4-bf93-4493-8f06-20511e17d694)
-
- <br>
-**Admin Home**<br>
-![image](https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/e83d2f9a-694e-4891-a71a-796feb527663)
-
- <br>
-**Manager Home**<br>
-![image](https://github.com/UmerFarooq966/Task-management-app---Laravel-10/assets/94523330/3701aebf-f5e4-4ca4-a737-9d0d71a83572)
