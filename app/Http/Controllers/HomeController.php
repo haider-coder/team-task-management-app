@@ -49,7 +49,8 @@ class HomeController extends Controller
         $recentTasks = Task::latest()->first();
         $recentUsers = User::latest()->first();
         $pendingTasksCount = Task::where('status', 'To Do')->count();
-        $pendingTasksCount = Task::where('status', 'Completed')->count();
+        $completedTasksCount = Task::where('status', 'Completed')->count();
+        $inprogressTasksCount = Task::where('status', 'In Progress')->count();
         $pendingUsersCount = User::where('email_verified_at', 'null')->count();
 
         return view('adminhome', [
@@ -58,6 +59,8 @@ class HomeController extends Controller
             'recentTasks' => $recentTasks,
             'recentUsers' => $recentUsers,
             'pendingTasksCount' => $pendingTasksCount,
+            'completedTasksCount' => $completedTasksCount,
+            'inprogressTasksCount' => $inprogressTasksCount,
             'pendingUsersCount' => $pendingUsersCount,
         ]);
     }

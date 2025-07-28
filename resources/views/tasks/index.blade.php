@@ -1,157 +1,133 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Tasks</h5>
+            @if(auth()->user()->type != 'user' && auth()->user()->type != 'manager')
+                <a href="{{ route('admin.tasks.create') }}" class="btn btn-light btn-sm">
+                    <i class="fa fa-plus"></i> Add Task
+                </a>
+            @endif
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="taskTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            @if(auth()->user()->type != 'user')
+                                <th>User</th>
+                            @endif
+                            <th>Status</th>
+                            <th>Actions</th>
+                            @if(auth()->user()->type != 'user')
+                                <th>Notify by Mail</th>
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($tasks as $task)
+                        <tr>
+                            <td>
+                                <a href="#" data-toggle="modal" data-target="#taskModal{{ $task->id }}">
+                                    {{ $task->title }}
+                                </a>
+                            </td>
+                            @if(auth()->user()->type != 'user')
+                                <td>{{ $task->user->name }} ({{ $task->user->type }})</td>
+                            @endif
+                            <td>
+                                @php
+                                    $statusColor = match($task->status) {
+                                        'To Do' => 'bg-warning',
+                                        'In Progress' => 'bg-info',
+                                        'Completed' => 'bg-success',
+                                        default => 'bg-secondary'
+                                    };
+                                @endphp
+                                <span class="badge {{ $statusColor }}">{{ $task->status }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#taskModal{{ $task->id }}">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
 
-                    <div class="card-body">
-
-                        <h2>All Tasks</h2>
-                        @if(auth()->user()->type != 'user' && auth()->user()->type != 'manager')
-                            <a href="{{ route('admin.tasks.create') }}" class="btn btn-primary">Add Task</a>
-
-
-                            <!-- Task list -->
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Status</th>
-                                    <th>User</th>
-                                    <th>Actions</th>
-                                    <th>Notify by mail</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($tasks as $task)
-                                    <tr>
-                                        <td>{{ $task->title }}</td>
-                                        <td>{{ $task->status }}</td>
-                                        <td>{{ $task->user->name }}</td>
-                                        <td>
-                                            <button class="btn btn-info" data-toggle="modal"
-                                                    data-target="#taskModal{{ $task->id }}">
-                                                View Details
-                                            </button>
-                                            <a href="{{ route('admin.tasks.edit', $task->id) }}"
-                                               class="btn btn-warning">Edit</a>
-                                            <form action="{{ route('admin.tasks.destroy', $task->id) }}" method="post"
-                                                  style="display:inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger"
-                                                        onclick="return confirm('Are you sure you want to delete this task?')">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('notify.user', ['taskId' => $task->id]) }}" class="btn btn-primary">
-                                                Notify User
-                                            </a>
-                                    </tr>
-
-                                    <!-- Task Modal -->
-                                    <div class="modal fade" id="taskModal{{ $task->id }}" tabindex="-1" role="dialog"
-                                         aria-labelledby="taskModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="taskModalLabel">{{ $task->title }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p><strong>Title:</strong> {{ $task->title }}</p>
-                                                    <p><strong>Description:</strong> {{ $task->description }}</p>
-                                                    <p><strong>Status:</strong> {{ $task->status }}</p>
-                                                    <p><strong>User:</strong> {{ $task->user->name }}</p>
-                                                    <p><strong>Feedback:</strong> {{ $task->feedback}}</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-dismiss="modal">Close
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        @else
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    @if(auth()->user()->type == 'manager')
-                                        <th>User</th>
+                                    @if(auth()->user()->type != 'user' && auth()->user()->type != 'manager')
+                                        <a href="{{ route('admin.tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('admin.tasks.destroy', $task->id) }}" method="POST" class="d-inline-block"
+                                              onsubmit="return confirm('Are you sure you want to delete this task?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('tasks.update-status', $task) }}" method="post" class="d-inline-block">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-sm btn-warning" name="status" value="In Progress">In Progress</button>
+                                            <button type="submit" class="btn btn-sm btn-success" name="status" value="Completed">Completed</button>
+                                        </form>
                                     @endif
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach ($tasks as $task)
-                                    <tr>
-                                        @php
-                                            $statusColor = '';
-                                            switch ($task->status) {
-                                                case 'To Do':
-                                                    $statusColor = 'bg-warning'; // Yellow for 'To Do'
-                                                    break;
-                                                case 'In Progress':
-                                                    $statusColor = 'bg-info'; // Blue for 'In Progress'
-                                                    break;
-                                                case 'Completed':
-                                                    $statusColor = 'bg-success'; // Green for 'Completed'
-                                                    break;
-                                                // Add more cases if needed
-                                                default:
-                                                    $statusColor = ''; // Default color
-                                                    break;
-                                            }
-                                        @endphp
-                                        <td>
-                                            <a href="#" data-toggle="modal" data-target="#taskModal{{ $task->id }}">
-                                                {{ $task->title }}
-                                            </a>
-                                        </td>
-                                        @if(auth()->user()->type == 'manager')
-                                            <td>{{ $task->user->name }} : {{ $task->user->type}}</td>
-                                        @endif
-                                        <td>
-                                            <span class="badge {{ $statusColor }}">{{ $task->status }}</span>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                @if(auth()->user()->type == 'manager')
-                                                    <a href="{{ route('notify.user', ['taskId' => $task->id]) }}" class="btn btn-primary btn-sm">
-                                                        Notify User
-                                                    </a>
-                                                @endif
-                                                <form action="{{ route('tasks.update-status', $task) }}" method="post">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-warning btn-sm" name="status" value="In Progress">In Progress</button>
-                                                    <button type="submit" class="btn btn-success btn-sm" name="status" value="Completed">Completed</button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                                </div>
+                            </td>
+                            @if(auth()->user()->type != 'user')
+                                <td>
+                                    <a href="{{ route('notify.user', ['taskId' => $task->id]) }}" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-envelope"></i> Notify
+                                    </a>
+                                </td>
+                            @endif
+                        </tr>
 
-                        @endif
-                    </div>
-                </div>
+                        {{-- Modal --}}
+                        <div class="modal fade" id="taskModal{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel{{ $task->id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="taskModalLabel{{ $task->id }}">{{ $task->title }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span>&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Description:</strong> {{ $task->description }}</p>
+                                        <p><strong>Status:</strong> {{ $task->status }}</p>
+                                        <p><strong>User:</strong> {{ $task->user->name }}</p>
+                                        <p><strong>Feedback:</strong> {{ $task->feedback }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#taskTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search tasks..."
+            },
+            columnDefs: [
+                { orderable: false, targets: [-1, -2] } // prevent sorting on action columns
+            ]
+        });
+    });
+</script>
 @endsection
+
+

@@ -1,76 +1,94 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
 
-                    <div class="card-body">
-                        @if(session('success'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('success') }}
-                            </div>
-                        @endif
+            {{-- Alerts --}}
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
 
-                        @if($errors->any())
-                            <div class="alert alert-danger" role="alert">
-                                <ul>
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
 
-                        <h2>All Users</h2>
+            {{-- Card --}}
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">User Management</h5>
+                </div>
 
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Actions</th>
-                            </tr>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="usersTable" class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Tasks</th>
+                                    <th>Delete</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach($users as $user)
+                                @foreach($users as $user)
                                 <tr>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
-                                        <form action="{{ route('admin.users.update-type', $user->id) }}" method="post">
+                                        <form action="{{ route('admin.users.update-type', $user->id) }}" method="post" class="d-flex flex-column gap-1">
                                             @csrf
                                             @method('patch')
-                                            <select name="type" class="form-control">
+                                            <select name="type" class="form-select form-select-sm">
                                                 <option value="1" {{ old('type', $user->type) === 'admin' ? 'selected' : '' }}>Admin</option>
                                                 <option value="2" {{ old('type', $user->type) === 'manager' ? 'selected' : '' }}>Manager</option>
                                                 <option value="0" {{ old('type', $user->type) === 'user' ? 'selected' : '' }}>User</option>
                                             </select>
-                                            <button type="submit" class="btn btn-primary btn-sm mt-2">Change Role</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
                                         </form>
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.users.show_tasks', $user->id) }}" class="btn btn-info btn-sm">View Tasks</a>
+                                        <a href="{{ route('admin.users.show_tasks', $user->id) }}" class="btn btn-sm btn-outline-info"> <i class="fa fa-tasks"></i> Tasks</a>
                                     </td>
                                     <td>
-                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="post" style="display:inline">
+                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this user?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">
-                                                Delete
-                                            </button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</button>
                                         </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                                @endforeach
                             </tbody>
                         </table>
-                    </div>
+                    </div> <!-- /table-responsive -->
                 </div>
             </div>
+
         </div>
     </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#usersTable').DataTable({
+            columnDefs: [
+                { orderable: false, targets: [2, 3, 4] } // disable sorting for Role, Tasks, Delete
+            ]
+        });
+    });
+</script>
 @endsection
+
+
