@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -10,7 +11,17 @@ class UserController extends Controller
     public function index()
     {
         // Display all users
-        $users = User::all();
+        $users = User::withCount([
+            'tasks as completed_tasks_count' => function ($query) {
+                $query->where('status', 'Completed');
+            },
+            'tasks as in_progress_tasks_count' => function ($query) {
+                $query->where('status', 'In Progress');
+            },
+            'tasks as pending_tasks_count' => function ($query) {
+                $query->where('status', 'To Do');
+            },
+        ])->get();
         return view('users.index', compact('users'));
     }
 
