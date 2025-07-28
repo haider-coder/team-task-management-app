@@ -21,10 +21,11 @@
                                 <th>User</th>
                             @endif
                             <th>Status</th>
-                            <th>Actions</th>
                             @if(auth()->user()->type != 'user')
                                 <th>Notify by Mail</th>
                             @endif
+                            <th>Actions</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,13 @@
                                 @endphp
                                 <span class="badge {{ $statusColor }}">{{ $task->status }}</span>
                             </td>
+                            @if(auth()->user()->type != 'user')
+                                <td>
+                                    <a href="{{ route('notify.user', ['taskId' => $task->id]) }}" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-envelope"></i> Notify
+                                    </a>
+                                </td>
+                            @endif
                             <td>
                                 <div class="d-flex flex-wrap gap-1">
                                     <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#taskModal{{ $task->id }}">
@@ -75,13 +83,7 @@
                                     @endif
                                 </div>
                             </td>
-                            @if(auth()->user()->type != 'user')
-                                <td>
-                                    <a href="{{ route('notify.user', ['taskId' => $task->id]) }}" class="btn btn-sm btn-primary">
-                                        <i class="fa fa-envelope"></i> Notify
-                                    </a>
-                                </td>
-                            @endif
+                            
                         </tr>
 
                         {{-- Modal --}}
