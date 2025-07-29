@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-4">
 
-    <h2 class="fw-bold mb-4">Welcome, Admin!</h2>
+    <h2 class="fw-bold mb-4">Welcome, {{Auth::user()->name}}</h2>
 
     <!-- Summary & Recent Activity -->
     <div class="row g-4">
@@ -30,15 +30,15 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ route('tasks.pending') }}" class="text-decoration-none">To Do Tasks</a>
+                            <a href="{{ route('tasks.pending') }}" class="text-decoration-none">To Do</a>
                             <span class="badge bg-primary rounded-pill">{{ $pendingTasksCount ?? 0 }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ route('tasks.inProgress') }}" class="text-decoration-none">In-Progress Tasks</a>
+                            <a href="{{ route('tasks.inProgress') }}" class="text-decoration-none">In-Progress</a>
                             <span class="badge bg-danger rounded-pill">{{ $inprogressTasksCount ?? 0 }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ route('tasks.completed') }}" class="text-decoration-none">Completed Tasks</a>
+                            <a href="{{ route('tasks.completed') }}" class="text-decoration-none">Completed</a>
                             <span class="badge bg-success rounded-pill">{{ $completedTasksCount ?? 0 }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">

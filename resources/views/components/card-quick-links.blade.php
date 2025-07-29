@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header">Quick Links</div>
+    <div class="card-header bg-primary text-white">Quick Links</div>
     <div class="card-body">
         <ul>
             <li><a href="{{ route('admin.tasks.index') }}">Manage Tasks</a></li>

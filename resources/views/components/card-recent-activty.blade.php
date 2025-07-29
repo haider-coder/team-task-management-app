@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header">Recent Activity</div>
+    <div class="card-header bg-primary text-white">Recent Activity</div>
     <div class="card-body">
         <ul>
             <li>Recent Task: <b>{{ optional($recentTasks)->title ?? 'N/A' }}</b> - {{ optional($recentTasks)->created_at ? $recentTasks->created_at->diffForHumans() : 'N/A' }}</li>
