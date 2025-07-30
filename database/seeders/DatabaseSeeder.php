@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
          'name'=>'Haider Majeed',
          'email'=>'haiderjuttearner@gmail.com',
          'type'=>1,
-         'password'=> bcrypt('123456'),
+         'password'=> bcrypt('jutt007'),
       ]);
 
       \App\Models\Tag::insert([
