@@ -121,7 +121,7 @@ class TaskController extends Controller
 
         $tags  = Tag::orderBy('name')->get();
 
-        return view('tasks.in-progress', compact('tasks', 'tags'));
+        return view('tasks.in-Progress', compact('tasks', 'tags'));
     }
 
     public function completedTasks()
