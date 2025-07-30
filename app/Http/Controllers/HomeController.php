@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,8 +31,8 @@ class HomeController extends Controller
 
         // Retrieve only tasks with status 'To Do' or 'In Progress'
         $tasks = $userTasks->whereIn('status', ['To Do', 'In Progress'])->get();
-
-        return view('/index', compact('tasks'));
+        $tags = Tag::all();
+        return view('/index', compact('tasks', 'tags'));
     }
 
 

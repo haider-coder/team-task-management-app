@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->enum('status', ['To Do', 'In Progress', 'Completed'])->default('To Do');
+            $table->timestamp('deadline')->nullable();
+            $table->foreignId('tag_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

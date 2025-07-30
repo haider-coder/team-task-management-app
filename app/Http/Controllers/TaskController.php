@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
 use App\Notifications\TaskAssigned;
@@ -20,33 +21,38 @@ class TaskController extends Controller
         } else {
             $tasks = auth()->user()->tasks()->completed()->get();
         }
+        $tags = Tag::all();
 
 
-        return view('tasks.index', compact('tasks'));
+        return view('tasks.index', compact('tasks', 'tags'));
     }
 
     public function create()
     {
         // Display form to create a new task
         $users = User::all();
-        return view('tasks.create', compact('users'));
+        $tags  = Tag::orderBy('name')->get();
+        return view('tasks.create', compact('users', 'tags'));
     }
 
     public function store(Request $request)
     {
-        // Store a new task
-        $task = new Task;
-        $task->title = $request->input('title');
-        $task->description = $request->input('description');
-        $task->status = $request->input('status');
-        $task->user_id = $request->input('user_id');
-        $task->created_at = now();
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string',
+            'status'      => 'required|in:To Do,In Progress,Completed',
+            'user_id'     => 'required|exists:users,id',
+            'deadline'    => 'nullable|date',
+            'tag_id'      => 'required|exists:tags,id',
+        ]);
 
-        $user = User::find($request->input('user_id')); // Retrieve the User model instance
+        // Create
+        $task = Task::create($validated + ['created_at' => now()]);
 
+        // Notify
+        $user = User::find($validated['user_id']);
         if ($user) {
-            $task->save(); // Save the task first to get the ID
-            $user->notify(new TaskAssigned($task)); // Now generate the URL with the task ID
+            $user->notify(new TaskAssigned($task));
         } else {
             return redirect()->route('admin.tasks.index')->with('error', 'User not found.');
         }
@@ -60,18 +66,23 @@ class TaskController extends Controller
         // Display form to edit a task
         $task = Task::findOrFail($id);
         $users = User::all();
-        return view('tasks.edit', compact('task', 'users'));
+        $tags  = Tag::orderBy('name')->get();
+        return view('tasks.edit', compact('task', 'users', 'tags'));
     }
 
     public function update(Request $request, $id)
     {
-        // Update an existing task
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string',
+            'status'      => 'required|in:To Do,In Progress,Completed',
+            'user_id'     => 'required|exists:users,id',
+            'deadline'    => 'nullable|date',
+            'tag_id'      => 'required|exists:tags,id',
+        ]);
+
         $task = Task::findOrFail($id);
-        $task->title = $request->input('title');
-        $task->description = $request->input('description');
-        $task->status = $request->input('status');
-        $task->user_id = $request->input('user_id');
-        $task->save();
+        $task->update($validated);
 
         return redirect()->route('admin.tasks.index')->with('success', 'Task updated successfully');
     }
@@ -93,7 +104,10 @@ class TaskController extends Controller
         } else {
             $tasks = auth()->user()->tasks()->pending()->get();
         }
-        return view('tasks.pending', compact('tasks'));
+
+        $tags  = Tag::orderBy('name')->get();
+
+        return view('tasks.pending', compact('tasks', 'tags'));
     }
 
     public function inProgressTasks()
@@ -105,7 +119,9 @@ class TaskController extends Controller
             $tasks = auth()->user()->tasks()->inProgress()->get();
         }
 
-        return view('tasks.in-progress', compact('tasks'));
+        $tags  = Tag::orderBy('name')->get();
+
+        return view('tasks.in-progress', compact('tasks', 'tags'));
     }
 
     public function completedTasks()
@@ -117,7 +133,9 @@ class TaskController extends Controller
             $tasks = auth()->user()->tasks()->completed()->get();
         }
 
-        return view('tasks.completed', compact('tasks'));
+        $tags  = Tag::orderBy('name')->get();
+
+        return view('tasks.completed', compact('tasks', 'tags'));
     }
 
     //updating tasks from user

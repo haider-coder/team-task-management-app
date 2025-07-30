@@ -19,5 +19,21 @@ class DatabaseSeeder extends Seeder
          'type'=>1,
          'password'=> bcrypt('123456'),
       ]);
+
+      \App\Models\Tag::insert([
+         'name'=>'Gen',
+         'created_at' => now(),
+         'updated_at' => now(),
+      ]);
+      \App\Models\Tag::insert([
+         'name'=>'Edu',
+         'created_at' => now(),
+         'updated_at' => now(),
+      ]);
+      \App\Models\Tag::insert([
+         'name'=>'Stu',
+         'created_at' => now(),
+         'updated_at' => now(),
+      ]);
     }
 }

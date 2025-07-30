@@ -29,7 +29,7 @@ Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'user-access:user'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
-  //  Route::get('/home', [HomeController::class, 'index'])->name('home');
+   Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 });
 

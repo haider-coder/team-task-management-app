@@ -1,46 +1,122 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Create Task') }}</div>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
 
-                    <div class="card-body">
-             
-                        <form method="post" action="{{ route('admin.tasks.store') }}">
-                            @csrf
-                            <div class="form-group">
-                                <label for="title">Title:</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center">
+                    <span><i class="fa fa-plus me-2"></i>Create Task</span>
+                    <a href="{{ route('admin.tasks.index') }}" class="btn btn-light btn-sm">
+                        <i class="fa fa-arrow-left"></i> Back
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <strong><i class="fa fa-warning me-1"></i> Please fix the issues below.</strong>
+                            <ul class="mb-0 mt-2">
+                                @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('admin.tasks.store') }}">
+                        @csrf
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label for="title" class="form-label fw-semibold">
+                                    <i class="fa fa-header me-1"></i> Title
+                                </label>
+                                <input type="text" id="title" name="title"
+                                       class="form-control @error('title') is-invalid @enderror"
+                                       value="{{ old('title') }}" required placeholder="Enter task title">
+                                @error('title') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="form-group">
-                                <label for="description">Description:</label>
-                                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+
+                            <div class="col-md-12">
+                                <label for="description" class="form-label fw-semibold">
+                                    <i class="fa fa-file-text-o me-1"></i> Description
+                                </label>
+                                <textarea id="description" name="description" rows="4"
+                                          class="form-control @error('description') is-invalid @enderror"
+                                          required placeholder="Describe the task...">{{ old('description') }}</textarea>
+                                @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="form-group">
-                                <label for="status">Status:</label>
-                                <select class="form-control" id="status" name="status" required>
-                                    <option value="To Do">To Do</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
+
+                            <div class="col-md-4">
+                                <label for="status" class="form-label fw-semibold">
+                                    <i class="fa fa-flag me-1"></i> Status
+                                </label>
+                                <select id="status" name="status"
+                                        class="form-control @error('status') is-invalid @enderror" required>
+                                    <option value="To Do"       {{ old('status') === 'To Do' ? 'selected' : '' }}>To Do</option>
+                                    <option value="In Progress" {{ old('status') === 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                    <option value="Completed"   {{ old('status') === 'Completed' ? 'selected' : '' }}>Completed</option>
                                 </select>
+                                @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="form-group">
-                                <label for="user_id">Assign to User:</label>
-                                <select class="form-control" id="user_id" name="user_id" required>
+
+                            <div class="col-md-4">
+                                <label for="user_id" class="form-label fw-semibold">
+                                    <i class="fa fa-user me-1"></i> Assign to User
+                                </label>
+                                <select id="user_id" name="user_id"
+                                        class="form-control @error('user_id') is-invalid @enderror" required>
+                                    <option value="" disabled {{ old('user_id') ? '' : 'selected' }}>Select a user</option>
                                     @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }} - - - {{$user->type}}</option>
+                                        <option value="{{ $user->id }}" {{ (string)old('user_id') === (string)$user->id ? 'selected' : '' }}>
+                                            {{ $user->name }} — {{ $user->type }}
+                                        </option>
                                     @endforeach
                                 </select>
+                                @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <br>
-                            <button type="submit" class="btn btn-primary">Create Task</button>
-                        </form>
-                    </div>
+
+                            <div class="col-md-4">
+                                <label for="tag_id" class="form-label fw-semibold">
+                                    <i class="fa fa-tags me-1"></i> Tag
+                                </label>
+                                <select id="tag_id" name="tag_id"
+                                        class="form-control @error('tag_id') is-invalid @enderror" required>
+                                    <option value="" disabled {{ old('tag_id') ? '' : 'selected' }}>Select a tag</option>
+                                    @foreach($tags as $tag)
+                                        <option value="{{ $tag->id }}" {{ (string)old('tag_id') === (string)$tag->id ? 'selected' : '' }}>
+                                            {{ $tag->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('tag_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="deadline" class="form-label fw-semibold">
+                                    <i class="fa fa-calendar me-1"></i> Deadline
+                                </label>
+                                <input type="datetime-local" id="deadline" name="deadline"
+                                       class="form-control @error('deadline') is-invalid @enderror"
+                                       value="{{ old('deadline') }}" placeholder="YYYY-MM-DD HH:MM">
+                                <small class="text-muted"><i class="fa fa-info-circle"></i> Optional.</small>
+                                @error('deadline') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="{{ route('admin.tasks.index') }}" class="btn btn-outline-secondary">
+                                <i class="fa fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> Create Task
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
+
         </div>
     </div>
+</div>
 @endsection

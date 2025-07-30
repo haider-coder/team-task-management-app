@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4">
+<div class="container-fluid py-4">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card shadow-sm border-0">
@@ -18,6 +18,7 @@
                             </div>
                         @endif
 
+                        {{-- Cards --}}
                         <div class="row mb-4">
                             <div class="col-md-4">
                                 <a href="{{ route('tasks.pending') }}" class="text-decoration-none">
@@ -51,6 +52,7 @@
                             </div>
                         </div>
 
+                        {{-- All tasks --}}
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="mb-0"><i class="fa fa-tasks me-2"></i>All Tasks</h5>
                         </div>
@@ -60,11 +62,24 @@
                                 <i class="fa fa-info-circle me-1"></i> No tasks found.
                             </div>
                         @else
-                            <ul id="taskList" class="list-group list-group-flush">
-                                @foreach ($tasks as $task)
-                                    <x-task-list :task="$task"/>
-                                @endforeach
-                            </ul>
+                            <div class="table-responsive">
+                                <table id="tasks-table" class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th><i class="fa fa-heading"></i> ID</th>
+                                            <th><i class="fa fa-heading"></i> Title</th>
+                                            <th><i class="fa fa-calendar"></i> Deadline</th>
+                                            <th><i class="fa fa-flag"></i> Status</th>
+                                            <th><i class="fa fa-user"></i> Assigned User</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($tasks as $task)
+                                            <x-task-list :task="$task"/>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         @endif
                     @endauth
                 </div>
@@ -72,4 +87,19 @@
         </div>
     </div>
 </div>
+
+{{-- DataTables --}}
+<script>
+    $(document).ready(function () {
+        $('#tasks-table').DataTable({
+            responsive: true,
+            pageLength: 10,
+            order: [],
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search tasks..."
+            }
+        });
+    });
+</script>
 @endsection

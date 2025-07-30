@@ -16,11 +16,13 @@
                 <table id="taskTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Title</th>
                             @if(auth()->user()->type != 'user')
                                 <th>User</th>
                             @endif
                             <th>Status</th>
+                            <th>Deadline</th>
                             @if(auth()->user()->type != 'user')
                                 <th>Notify by Mail</th>
                             @endif
@@ -30,7 +32,12 @@
                     </thead>
                     <tbody>
                         @foreach($tasks as $task)
+                     
                         <tr>
+                            <td>
+                                
+                                {{$tags->firstWhere('id', $task->tag_id)->name ?? 'No Tag'}}-{{$task->id}}
+                            </td>
                             <td>
                                 <a href="#" data-toggle="modal" data-target="#taskModal{{ $task->id }}">
                                     {{ $task->title }}
@@ -49,6 +56,9 @@
                                     };
                                 @endphp
                                 <span class="badge {{ $statusColor }}">{{ $task->status }}</span>
+                            </td>
+                            <td>
+                                {{$task->deadline}}
                             </td>
                             @if(auth()->user()->type != 'user')
                                 <td>
@@ -91,14 +101,19 @@
                             <div class="modal-dialog modal-dialog-scrollable" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="taskModalLabel{{ $task->id }}">{{ $task->title }}</h5>
+                                        <h5 class="modal-title" id="taskModalLabel{{ $task->id }}">
+                                            
+                                             {{$tags->firstWhere('id', $task->tag_id)->name ?? 'No Tag'}}-{{$task->id}}
+                                        </h5>
                                         <button type="button" class="close" data-dismiss="modal">
                                             <span>&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
+                                        <p><strong>Title:</strong> {{ $task->title }}</p>
                                         <p><strong>Description:</strong> {{ $task->description }}</p>
                                         <p><strong>Status:</strong> {{ $task->status }}</p>
+                                        <p><strong>Deadline:</strong> {{ $task->deadline }}</p>
                                         <p><strong>User:</strong> {{ $task->user->name }}</p>
                                         <p><strong>Feedback:</strong> {{ $task->feedback }}</p>
                                     </div>

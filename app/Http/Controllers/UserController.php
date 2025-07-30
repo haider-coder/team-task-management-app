@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -30,7 +31,8 @@ class UserController extends Controller
         // Display tasks for a specific user
         $user = User::findOrFail($id);
         $tasks = $user->tasks;
-        return view('users.show-tasks', compact('user', 'tasks'));
+        $tags = Tag::all();
+        return view('users.show-tasks', compact('user', 'tasks', 'tags'));
     }
 
     public function destroy($id)
