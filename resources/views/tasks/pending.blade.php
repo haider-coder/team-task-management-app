@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4">
+<div class="container-fluid py-4">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center">
-                    <span><i class="fa fa-list-check me-2"></i>Todo Tasks</span>
+                    <span><i class="fa fa-list-check me-2"></i>Todo</span>
                     <span class="badge bg-light text-dark">{{ $tasks->count() }} tasks</span>
                 </div>
 
